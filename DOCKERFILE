@@ -1,0 +1,11 @@
+FROM joyzoursky/python-chromedriver
+
+WORKDIR ./
+
+ADD ./
+
+RUN pip install -r requirements.txt
+
+ENTRYPOINT [ "python" ]
+
+CMD ["main.py"]
