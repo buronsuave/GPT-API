@@ -29,6 +29,14 @@ def create_request():
     api.refresh_chat_page()  # refresh the chat page
     return jsonify({'message': resp['message']}), 200
 
+@app.route('/test', methods=['POST', 'GET'])
+def create_request():
+    resp = api.send_message("Give me a joke")
+    api.reset_conversation()  # reset the conversation
+    api.clear_conversations()  # clear all conversations
+    api.refresh_chat_page()  # refresh the chat page
+    return jsonify({'message': resp['message']}), 200
+
 @app.route('/transcript', methods=['GET'])
 def video_transcript():
     if request.method != 'GET':
