@@ -35,7 +35,7 @@ def video_transcript():
         return  jsonify({'message': 'Bad request'}), 400
     
     json = request.get_json(force=True)
-    if json.get('question') is None:
+    if json.get('video_id') is None:
         return jsonify({'message': 'Bad request'}), 400
     
     video_id= json.get('video_id')
