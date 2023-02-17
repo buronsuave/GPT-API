@@ -29,20 +29,16 @@ def create_request():
     api.refresh_chat_page()  # refresh the chat page
     return jsonify({'message': resp['message']}), 200
 
-@app.route('/test', methods=['POST', 'GET'])
-def create_request():
-    resp = api.send_message("Give me a joke")
-    api.reset_conversation()  # reset the conversation
-    api.clear_conversations()  # clear all conversations
-    api.refresh_chat_page()  # refresh the chat page
-    return jsonify({'message': resp['message']}), 200
-
 @app.route('/transcript', methods=['GET'])
 def video_transcript():
     if request.method != 'GET':
         return  jsonify({'message': 'Bad request'}), 400
     
-    video_id= request.args.get('video_id')
+    json = request.get_json(force=True)
+    if json.get('question') is None:
+        return jsonify({'message': 'Bad request'}), 400
+    
+    video_id= json.get('video_id')
     transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['es', 'en'])
     if transcript.language_code != 'es' and  transcript.is_translatable and 'es' in transcript.translation_languages:
         transcript = transcript.translate('es')
