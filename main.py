@@ -1,5 +1,7 @@
 from pyChatGPT import ChatGPT
 from flask import Flask, request, jsonify
+from youtube_transcript_api import YouTubeTranscriptApi
+from youtube_transcript_api.formatters import TextFormatter
 
 def create_app():
     app = Flask(__name__)
@@ -26,7 +28,18 @@ def create_request():
     api.clear_conversations()  # clear all conversations
     api.refresh_chat_page()  # refresh the chat page
     return jsonify({'message': resp['message']}), 200
-    
 
+@app.route('/transcript', methods=['GET'])
+def video_transcript():
+    if request.method != 'GET':
+        return  jsonify({'message': 'Bad request'}), 400
+    
+    video_id= request.args.get('video_id')
+    transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['es', 'en'])
+    if transcript.language_code != 'es' and  transcript.is_translatable and 'es' in transcript.translation_languages:
+        transcript = transcript.translate('es')
+    
+    return TextFormatter().format_transcript(transcript), 200
+    
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
