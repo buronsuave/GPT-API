@@ -1,8 +1,8 @@
 FROM joyzoursky/python-chromedriver
 
-WORKDIR ./
+WORKDIR /api
 
-ADD ./
+ADD . /api
 
 RUN pip install -r requirements.txt
 
