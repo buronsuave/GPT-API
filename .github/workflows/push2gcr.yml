@@ -9,24 +9,49 @@ jobs:
       contents: 'read'
       id-token: 'write'
     steps:      
+      - name: Checkout Code
       - uses: actions/checkout@v3
-      - name: Authenticate to Google Cloud
-        id: auth
-        uses: GoogleCloudPlatform/github-actions/setup-gcloud@master
-  with:
-    service_account_key: ${{ secrets.GCR_DEVOPS_SERVICE_ACCOUNT_KEY }}
-    project_id: ${{ secrets.PROJECT_ID }}
-    export_default_credentials: true
-  
-- name: Image
-  run: |-
-    docker build --build-arg NPM_TOKEN=${{ secrets.NPM_TOKEN }} -t eu.gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA .
-
-# Configure docker to use the gcloud command-line tool as a credential helper
-- run: |
-    gcloud auth configure-docker -q
-
-# Push image to Google Container Registry
-- name: Build
-  run: |-
-    docker push eu.gcr.io/$PROJECT_ID/$SERVICE_NAME:$GITHUB_SHA
+      
+      - name: Login to GCR
+        env:
+          PROJECT_ID: gpt-api-378106 #create env called PROJECT_ID consisted of our actual GCP Project ID
+        uses: google-github-actions/setup-gcloud@v0.3.0 #checkouts GCR repo, so this workflow can access it
+        with:
+          service_account_key: ${{ secrets.SERVICE_ACCOUNT_KEY }} #parse the value of repository secret called SERVICE_ACCOUNT_KEY that we have created earlier
+          project_id: ${{ env.PROJECT_ID }} #parse the value of env called PROJECT_ID
+          export_default_credentials: true
+          
+      - name: Build Docker Image
+        env:
+          IMAGE_NAME: gpt_api #create env called IMAGE_NAME consisted of actual name of Docker Image after we build
+          PROJECT_ID: gpt-api-378106
+        run: docker build -t $IMAGE_NAME:latest . #build the docker image
+        
+      - name: Configure Docker Client
+        run:  |-
+          gcloud auth configure-docker --quiet #authenticate to gcr
+        
+      - name: Push Docker Image to Container Registry GCR
+        env: 
+          IMAGE_NAME: gpt_api
+          PROJECT_ID: gpt-api-378106
+        #tag docker image to gcr image format then push to gcr
+        run: |-
+          docker tag $IMAGE_NAME:latest gcr.io/$PROJECT_ID/$IMAGE_NAME:latest 
+          docker push gcr.io/$PROJECT_ID/$IMAGE_NAME:latest 
+          
+#       - name: Extract metadata (tags, labels) for Docker GHCR
+#         env:
+#           REGISTRY: ghcr.io
+#           IMAGE_NAME: ${{ github.repository }}
+#         id: meta
+#         uses: docker/metadata-action@98669ae865ea3cffbcbaa878cf57c20bbf1c6c38
+#         with:
+#           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }} #create ghcr image format within as id called meta
+#       - name: Build and push Docker image
+#         uses: docker/build-push-action@ad44023a93711e3deb337508980b4b5e9bcdc5dc #push docker image to ghcr
+#         with:
+#           context: .
+#           push: true
+#           tags: ${{ steps.meta.outputs.tags }}
+#           labels: ${{ steps.meta.outputs.labels }}
