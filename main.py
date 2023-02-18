@@ -1,7 +1,7 @@
 from pyChatGPT import ChatGPT
 from flask import Flask, request, jsonify
 from youtube_transcript_api import YouTubeTranscriptApi
-from youtube_transcript_api.formatters import TextFormatter
+from youtube_transcript_api.formatters import JSONFormatter
 
 def create_app():
     app = Flask(__name__)
@@ -29,21 +29,23 @@ def create_request():
     api.refresh_chat_page()  # refresh the chat page
     return jsonify({'message': resp['message']}), 200
 
-@app.route('/transcript', methods=['GET'])
+@app.route('/transcript', methods=['GET', 'POST'])
 def video_transcript():
-    if request.method != 'GET':
-        return  jsonify({'message': 'Bad request'}), 400
-    
-    json = request.get_json(force=True)
-    if json.get('video_id') is None:
-        return jsonify({'message': 'Bad request'}), 400
-    
-    video_id= json.get('video_id')
-    transcript = YouTubeTranscriptApi.get_transcript(video_id, languages=['es', 'en'])
-    if transcript.language_code != 'es' and  transcript.is_translatable and 'es' in transcript.translation_languages:
-        transcript = transcript.translate('es')
-    
-    return TextFormatter().format_transcript(transcript), 200
+  json = request.get_json(force=True)
+  if json.get('video_ids') is None:
+    return jsonify({'message': 'Bad request'}), 400
+
+  video_ids = json.get('video_ids')
+  transcript = YouTubeTranscriptApi.get_transcripts(video_ids,
+                                                   languages=['es', 'en'])
+  trs = []
+  for video in transcript:
+    for props in video:
+      texts = [a_tuple.get('text') for a_tuple in video[props]]
+      text = ' '.join(texts)
+      trs.append(text)
+  
+  return jsonify({'transcripts': trs}), 200
     
 if __name__ == '__main__':
     app.run(host='0.0.0.0', port=8000, debug=True)
