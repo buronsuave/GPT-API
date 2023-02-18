@@ -6,6 +6,6 @@ ADD . /api
 
 RUN pip install -r requirements.txt
 
-ENTRYPOINT [ "python" ]
+# ENTRYPOINT [ "python" ]
 
-CMD ["main.py"]
+CMD exec gunicorn --bind :$PORT --workers 1 --worker-class uvicorn.workers.UvicornWorker  --threads 8 api.main:app
