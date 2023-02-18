@@ -8,6 +8,7 @@ jobs:
     permissions:
       contents: 'read'
       id-token: 'write'
+      packages: 'write'
     steps:      
       - name: Checkout Code
       - uses: actions/checkout@v3
