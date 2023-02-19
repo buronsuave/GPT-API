@@ -18,6 +18,10 @@ def create_session():
 app = create_app()
 api = create_session()
 
+@app.route('/test', methods=['POST', 'GET'])
+def test():
+    return jsonify({'message': 'All good bro, api up and running'}), 200
+
 @app.route('/', methods=['POST', 'GET'])
 def create_request():
     json = request.get_json(force=True)
