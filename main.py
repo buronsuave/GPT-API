@@ -2,6 +2,7 @@ from pyChatGPT import ChatGPT
 from flask import Flask, request, jsonify
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api.formatters import JSONFormatter
+import os
 
 def create_app():
     app = Flask(__name__)
@@ -48,4 +49,4 @@ def video_transcript():
   return jsonify({'transcripts': trs}), 200
     
 if __name__ == '__main__':
-    app.run(host='0.0.0.0', port=8000, debug=True)
+    app.run(host='0.0.0.0', port=8888, debug=True)
