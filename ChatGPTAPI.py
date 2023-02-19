@@ -177,7 +177,7 @@ class ChatGPT:
 
         self.logger.debug('Initializing browser...')
         options = uc.ChromeOptions()
-        options.user_data_dir = f'{os.environ['PATH']}\\temp\\profile'
+        options.user_data_dir = f'{os.environ["PATH"]}\\temp\\profile'
         options.add_argument('--window-size=1024,768')
         if self.__proxy:
             options.add_argument(f'--proxy-server={self.__proxy}')
