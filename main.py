@@ -16,7 +16,7 @@ def create_session():
 # creates flask server
 
 app = create_app()
-api = create_session()
+# api = create_session()
 
 @app.route('/test', methods=['POST', 'GET'])
 def test():
