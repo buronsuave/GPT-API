@@ -1,7 +1,6 @@
 FROM python:3.8-alpine
 
-RUN apk add --no-cache chromium
-RUN apk add --no-cache xvfb
+RUN apk update && apk upgrade && apk add --no-cache chromium chromium-chromedriver xvfb
 
 COPY requirements.txt /
 RUN pip3 install -r /requirements.txt
