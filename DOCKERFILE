@@ -2,7 +2,8 @@ FROM selenium/standalone-chrome:latest
 
 RUN sudo apt-get -y update
 RUN sudo apt-get install -y python3-pip
-RUN sudo apt install chromium-browser xvfb
+RUN sudo apt install  -y chromium-browser
+RUN sudo apt install  -y xvfb
 COPY requirements.txt /
 RUN pip3 install -r /requirements.txt
 COPY main.py .
