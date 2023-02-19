@@ -177,6 +177,7 @@ class ChatGPT:
 
         self.logger.debug('Initializing browser...')
         options = uc.ChromeOptions()
+        options.user_data_dir = f'{os.environ['PATH']}\\temp\\profile'
         options.add_argument('--window-size=1024,768')
         if self.__proxy:
             options.add_argument(f'--proxy-server={self.__proxy}')
@@ -184,8 +185,8 @@ class ChatGPT:
             options.add_argument(arg)
         try:
             if self.__chrome_version is None:
-                self.driver = uc.Chrome(options=options)    
-            self.driver = uc.Chrome(options=options, version_main = self.__chrome_version)
+                self.driver = uc.Chrome(options=options, enable_cdp_events=True)    
+            self.driver = uc.Chrome(options=options, version_main = self.__chrome_version, enable_cdp_events=True)
         except TypeError as e:
             if str(e) == 'expected str, bytes or os.PathLike object, not NoneType':
                 raise ValueError('Chrome installation not found')
