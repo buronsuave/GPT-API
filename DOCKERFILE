@@ -1,4 +1,4 @@
-FROM joyzoursky/python-chromedriver
+FROM markadams/chromium-xvfb-py3
 
 COPY requirements.txt /
 RUN pip3 install -r /requirements.txt
