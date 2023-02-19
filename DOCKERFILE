@@ -1,9 +1,8 @@
-FROM selenium/standalone-chrome:latest
+FROM python:3.8-alpine
 
-RUN sudo apt-get -y update
-RUN sudo apt-get install -y python3-pip
-RUN sudo apt install  -y chromium-browser
-RUN sudo apt install  -y xvfb
+RUN apk add --no-cache chromium
+RUN apk add --no-cache xvfb
+
 COPY requirements.txt /
 RUN pip3 install -r /requirements.txt
 COPY main.py .
