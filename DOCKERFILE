@@ -1,4 +1,4 @@
-FROM zenika/alpine-chrome:100-with-chromedriver
+FROM zenika/alpine-chrome:with-chromedriver
 
 COPY requirements.txt /
 RUN pip3 install -r /requirements.txt
