@@ -1,4 +1,4 @@
-from pyChatGPT import ChatGPT
+from ChatGPTAPI import ChatGPT
 from flask import Flask, request, jsonify
 from youtube_transcript_api import YouTubeTranscriptApi
 from youtube_transcript_api.formatters import JSONFormatter
