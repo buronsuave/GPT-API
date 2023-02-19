@@ -2,3 +2,4 @@ Flask
 pyChatGPT
 gunicorn
 youtube_transcript_api
+PyVirtualDisplay
