@@ -1,4 +1,4 @@
-FROM markadams/chromium-xvfb-py3
+FROM zenika/alpine-chrome:100-with-chromedriver
 
 COPY requirements.txt /
 RUN pip3 install -r /requirements.txt
