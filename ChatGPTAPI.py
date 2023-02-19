@@ -183,6 +183,8 @@ class ChatGPT:
         for arg in self.__chrome_args:
             options.add_argument(arg)
         try:
+            if self.__chrome_version is None:
+                self.driver = uc.Chrome(options=options)    
             self.driver = uc.Chrome(options=options, version_main = self.__chrome_version)
         except TypeError as e:
             if str(e) == 'expected str, bytes or os.PathLike object, not NoneType':
