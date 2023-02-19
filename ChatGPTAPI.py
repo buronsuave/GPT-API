@@ -91,6 +91,7 @@ class ChatGPT:
         self.__proxy = proxy
         self.__chrome_args = chrome_args
         self.__moderation = moderation
+        self.__chrome_version = chrome_version
 
         if not self.__session_token and (
             not self.__email or not self.__password or not self.__auth_type
@@ -182,7 +183,7 @@ class ChatGPT:
         for arg in self.__chrome_args:
             options.add_argument(arg)
         try:
-            self.driver = uc.Chrome(options=options, version_main = self.chrome_version)
+            self.driver = uc.Chrome(options=options, version_main = self.__chrome_version)
         except TypeError as e:
             if str(e) == 'expected str, bytes or os.PathLike object, not NoneType':
                 raise ValueError('Chrome installation not found')
