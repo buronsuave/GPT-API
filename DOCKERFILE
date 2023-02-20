@@ -5,7 +5,7 @@ RUN apt-get --only-upgrade install google-chrome-stable
 COPY requirements.txt /
 RUN pip3 install -r /requirements.txt
 COPY main.py .
-COPY Auth0.py ./pyGPT
-COPY __init__.py ./pyGPT
-COPY pyChatGPT.py ./pyGPT
+COPY pyGPT/Auth0.py ./pyGPT
+COPY pyGPT/__init__.py ./pyGPT
+COPY pyGPT/pyChatGPT.py ./pyGPT
 CMD ["gunicorn" ,"-b", "0.0.0.0:8888", "main:app"]
