@@ -177,8 +177,12 @@ class ChatGPT:
 
         self.logger.debug('Initializing browser...')
         options = uc.ChromeOptions()
-        options.user_data_dir = f'{os.environ["PATH"]}\\temp\\profile'
+#         options.user_data_dir = f'{os.environ["PATH"]}\\temp\\profile'
         options.add_argument('--window-size=1024,768')
+        options.add_argument("start-maximized")
+        options.add_experimental_option("excludeSwitches", ["enable-automation"])
+        options.add_experimental_option('useAutomationExtension', False)
+        
         if self.__proxy:
             options.add_argument(f'--proxy-server={self.__proxy}')
         for arg in self.__chrome_args:
